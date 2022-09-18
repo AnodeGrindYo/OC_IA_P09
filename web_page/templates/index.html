@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.lineicons.com/3.0/lineicons.css" rel="stylesheet">
+  <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lettering.js/0.6.1/jquery.lettering.min.js"></script>
+  <script src="{{url_for('static', filename='js/animation.js')}}"></script>
+  <title>Flask App</title>
+</head>
+<body style="background-color: black">
+  <div class="container">
+  <div class="page">
+    <h1 class="glitch" data-text="RECOMMANDATION D'ARTICLES">RECOMMANDATION D'ARTICLES</h1>
+    
+    <form method="post" action="/">
+      <div class="form-group w-50 container">
+        <div class="p-2 column">
+          <label for="user_id">User ID</label>
+        </div>
+        <div class="p-2">
+          {% block userinput %}
+            {% if sended == false %}
+            <input type="number" id="user_id" name="user" min="1" max="322896" value={{user_id}} onchange="this.form.submit()">
+            {% else %}
+            <input type="number" value={{user_id}} disabled="true">
+            {% endif %}
+          {% endblock userinput %}
+        </div>
+      </div>
+    </form>
+    <div class="container">
+      <form id="content" method="post" action="/recommend">
+        {% block btn %}
+          {% if sended == false %}
+          <button id="validate" type="submit" class="btn btn-primary sub" onclick="loading();show_res();">Valider</button>
+          {% else %}
+          <button id="reset" type="button" class="btn btn-danger subreset" onclick="GoToHomePage();">Reset</button>
+          {% endif %}
+        {% endblock btn %}
+      </form>
+      <div id="loading" class="loading">Veuillez&nbsppatienter...</div>
+    </div>
+    {% if sended == True %}
+    <div class="d-flex flex-column justify-content-center">
+      <h2 class="p-2">Articles recommandés:</h2>
+      <div class="cards">
+        {% for num in result: %}
+        <div class="card" id="cards">
+          <div class="card-content">
+            <div class="card-info-wrapper">
+              <div class="card-info">
+                <i class="fa-duotone"></i>
+                <div class="card-info-title">
+                  <h3>Article ID: {{num}}</h3>  
+                  <h4>Lorem ipsum, et caetera</h4>
+                </div>    
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    
+  </div>
+  </div>
+  <script type="text/javascript">// <![CDATA[
+    (event) => {
+      event.preventDefault();
+    }
+    
+    function loading(){
+      $("#loading").show();
+      $("#content").hide();
+    }
+
+    function show_res(){
+      console.log("show_res");
+      document.getElementById("reset").style.display = "inline";
+      document.getElementById("validate").style.display = "none";
+      document.getElementById("user_id").style.disabled = true;
+    }
+
+    function GoToHomePage()
+    {
+      window.location = '/';
+    }
+
+      // ]]></script>
+      
+      <!-- Bootstrap Javascripts -->  
+    </body>
+    </html>
